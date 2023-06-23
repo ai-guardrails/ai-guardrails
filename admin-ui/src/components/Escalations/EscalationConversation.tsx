@@ -6,7 +6,6 @@ import KeyboardBackspaceOutlinedIcon from "@mui/icons-material/KeyboardBackspace
 import HourglassBottomOutlinedIcon from '@mui/icons-material/HourglassBottomOutlined';
 import { IconRobot, IconUser, IconShieldExclamation} from "@tabler/icons-react";
 import toast from "react-hot-toast";
-import { NULL } from "sass";
 export interface Props {
   selectedRow: any;
   handleClose: any;

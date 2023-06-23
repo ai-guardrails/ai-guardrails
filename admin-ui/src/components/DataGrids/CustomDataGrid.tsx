@@ -4,11 +4,13 @@ import { DataGrid, GridToolbar, GridSortModel, useGridApiContext, useGridSelecto
 import { getGridData, getDocsGridData } from "@/services";
 import TablePagination from '@mui/material/TablePagination';
 import { EscalationConversation } from "../Escalations/EscalationConversation";
+import toast from "react-hot-toast";
 interface CustomDataGridProps {
     columns: any;
     entity: string;
     initialSort: any;
     onGridDataUpdate?:any;
+    refereshGridData?:boolean;
 }
 
 interface RowData {
@@ -40,7 +42,7 @@ export const CustomDataGrid = (props: CustomDataGridProps) => {
 
     useEffect(() => {
         fetchData();
-      }, [sortConfig, range, filter]);
+      }, [sortConfig, range, filter, props?.refereshGridData]);
     
       const fetchData = async () => {
         setLoading(true);
@@ -66,8 +68,12 @@ export const CustomDataGrid = (props: CustomDataGridProps) => {
             props.onGridDataUpdate(rows);
           setRows(rows);
           setTotalRows(totalRows);
-        } catch (error) {
-          console.error("Error fetching data:", error);
+        } catch (error:any) {
+          console.error("Error fetching data: \n", error);
+          toast.error("Error fetching data: \n"+error?.message,{
+            duration:3000,
+            position:"bottom-center"
+          })
         } finally {
           setLoading(false);
         }
