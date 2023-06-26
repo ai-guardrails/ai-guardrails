@@ -53,89 +53,89 @@ export const SidebarItems = () => {
   const initialSidebarList = [
     {
       name: "Dashboards",
-      icon: <DashboardIcon sx={{ color: "white" }} />,
+      icon: <DashboardIcon/>,
       isExpanded: false,
       link: "/risk-monitoring",
       subMenu: [
         {
           name: "Risk Monitoring",
           link: "/risk-monitoring",
-          icon: <EnhancedEncryptionOutlinedIcon sx={{ color: "white" }} />,
+          icon: <EnhancedEncryptionOutlinedIcon />,
         },
         {
           name: "Usage Monitoring",
           link: "/usage-monitoring",
-          icon: <TrendingUpOutlinedIcon sx={{ color: "white" }} />,
+          icon: <TrendingUpOutlinedIcon />,
         },
       ],
     },
     {
       name: "Data Logs",
-      icon: <StorageIcon sx={{ color: "white" }} />,
+      icon: <StorageIcon />,
       isExpanded: false,
       link: "/chat-logs",
       subMenu: [
         {
           name: "Conversation Logs",
           link: "/conversation-logs",
-          icon: <QuestionAnswerOutlinedIcon sx={{ color: "white" }} />,
+          icon: <QuestionAnswerOutlinedIcon />,
         },
         {
           name: "Chat Logs",
           link: "/chat-logs",
-          icon: <ChatBubbleOutlineOutlinedIcon sx={{ color: "white" }} />,
+          icon: <ChatBubbleOutlineOutlinedIcon  />,
         },
         {
           name: "Analysis Logs",
           link: "/analysis-logs",
-          icon: <TroubleshootOutlinedIcon sx={{ color: "white" }} />,
+          icon: <TroubleshootOutlinedIcon />,
         },
         {
           name: "Redaction Logs",
           link: "/redaction-logs",
-          icon: <BlockOutlinedIcon sx={{ color: "white" }} />,
+          icon: <BlockOutlinedIcon />,
         },
       ],
     },
     {
       name: "Detection Controls",
-      icon: <PsychologyOutlinedIcon sx={{ color: "white" }} />,
+      icon: <PsychologyOutlinedIcon />,
       isExpanded: false,
       link: "/detection-Controls",
       subMenu: [
         {
           name: "PII Entities",
-          icon: <VoiceOverOffOutlinedIcon sx={{ color: "white" }} />,
+          icon: <VoiceOverOffOutlinedIcon />,
           link: "/pre-defined-rules",
         },
         {
           name: "Custom Deny Lists",
-          icon: <GavelOutlinedIcon sx={{ color: "white" }} />,
+          icon: <GavelOutlinedIcon />,
           link: "/custom-deny-lists",
         },
       ],
     },
     {
       name: "Monitoring",
-      icon: <ResetTvOutlinedIcon sx={{ color: "white" }} />,
+      icon: <ResetTvOutlinedIcon />,
       isExpanded: false,
       link: "/risk-monitoring",
       subMenu: [
         {
           name: "Escalations",
           link: "/escalations",
-          icon: <ReportOutlinedIcon sx={{ color: "white" }} />,
+          icon: <ReportOutlinedIcon />,
         },
       ],
     },
     {
       name: "Detection Models",
-      icon: <SmartToyOutlinedIcon sx={{ color: "white" }} />,
+      icon: <SmartToyOutlinedIcon />,
       link: "/detection-models",
     },
     {
       name: "User Management",
-      icon: <ContactPageOutlinedIcon sx={{ color: "white" }} />,
+      icon: <ContactPageOutlinedIcon />,
       link: "/user-management",
     },
     {
