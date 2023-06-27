@@ -45,7 +45,7 @@ export const ChatbarSettings = () => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-1 border-t border-white/20 pt-1 text-sm">
+    <div className="flex flex-col items-center space-y-1 border-t border-black/20 pt-1 text-sm">
       {conversations.length > 0 && !isArchiveView ? (
         <ClearConversations onClearConversations={handleClearConversations} />
       ) : null}

@@ -51,7 +51,7 @@ const Sidebar = <T,>({
   };
 
   const highlightDrop = (e: any) => {
-    e.target.style.background = '#343541';
+    e.target.style.background = '#ace2f5';
   };
 
   const removeHighlight = (e: any) => {
@@ -61,7 +61,7 @@ const Sidebar = <T,>({
   return isOpen ? (
     <div>
       <div
-        className={`fixed top-0 ${side}-0 z-40 flex h-full w-[260px] flex-none flex-col space-y-2 bg-white p-2 text-[14px] border-r-2 border-gray-600 text-[#75777A] transition-all sm:relative sm:top-0`}
+        className={`fixed top-0 ${side}-0 z-40 flex h-full w-[260px] flex-none flex-col space-y-2 bg-white p-2 text-[14px] border-l-2 border-r-2 border-gray-300 text-[#75777A] transition-all sm:relative sm:top-0`}
       >
        
         <div className="flex items-center">
@@ -79,7 +79,7 @@ const Sidebar = <T,>({
           </button>
 
           <button
-            className="ml-2 flex flex-shrink-0 cursor-pointer bg-[#1c96a3] hover:bg-[#23b4c3] items-center gap-3 rounded-md border border-white/20 p-3 text-sm text-white transition-colors duration-200 hover:bg-gray-500/10"
+            className="ml-2 flex flex-shrink-0 cursor-pointer  hover:bg-[#d8f5ff] items-center gap-3 text-[#1c96a3] rounded-md border border-2 border-[#1c96a3]/80 p-3 text-sm text-white transition-colors duration-200 hover:bg-gray-500/10"
             onClick={handleCreateFolder}
           >
             <IconFolderPlus size={16} />
@@ -105,7 +105,7 @@ const Sidebar = <T,>({
           {folderDisplayName}
          </div>
             <div className="flex border-b border-black/20 pb-2">
-              
+
               {folderComponent}
             </div>
           

@@ -30,6 +30,7 @@ import { SystemPrompt } from './SystemPrompt';
 import { TemperatureSlider } from './Temperature';
 import { MemoizedChatMessage } from './MemoizedChatMessage';
 import { anonymizeMessage, fetchPrompt, requestApproval } from '@/services';
+import { Header } from "@/components/Header/Header";
 
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
@@ -352,6 +353,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
   return (
     <div className="relative flex-1 overflow-hidden bg-white dark:bg-[#343541]">
       <>
+        <>
+          <Header/>
+        </>
         <div
           className="max-h-full overflow-x-hidden"
           ref={chatContainerRef}
@@ -363,10 +367,10 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                 <div className="text-center text-3xl font-semibold text-gray-800 dark:text-gray-100">
                   {models.length === 0 ? (
                     <div className="mx-auto flex h-full w-[300px] flex-col justify-center space-y-6 sm:w-[600px]">
-                      <div className="text-center text-4xl font-bold text-black dark:text-white">
-                        Welcome to {applicationName}
+                      <div className="text-center text-4xl font-bold text-[#75777A] dark:text-white">
+                        Welcome to <span className="text-[#18B4EA]">Podium</span> {applicationName}
                       </div>
-                      <div className="text-center text-2xl font-bold text-black dark:text-gray-400">
+                      <div className="text-center text-2xl font-bold text-[#75777A] dark:text-gray-400">
                         Protect your Confidential Information.
                       </div>
                     </div>

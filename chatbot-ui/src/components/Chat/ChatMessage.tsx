@@ -134,7 +134,7 @@ export const ChatMessage: FC<Props> = memo(
       <div
         className={`group md:px-4 ${
           message.role === "assistant" || message.role === "guardrails"
-            ? "border-b border-black/10 bg-gray-50 text-gray-800 dark:border-gray-900/50 dark:bg-[#444654] dark:text-gray-100"
+            ? "border-b border-black/10 bg-gray-50 text-gray-800 dark:border-gray-900/50 dark:bg-[#444654] dark:text-gray-100 bg-[#f1fcff]"
             : "border-b border-black/10 bg-white text-gray-800 dark:border-gray-900/50 dark:bg-[#343541] dark:text-gray-100"
         }`}
         style={{ overflowWrap: "anywhere" }}
@@ -222,7 +222,7 @@ export const ChatMessage: FC<Props> = memo(
                   {message.userActionRequired && messageIndex === (selectedConversation?.messages.length ?? 0) - 1 &&
                   <div className="flex">
                   <button
-                    className=" mt-1 flex w-[190px] flex-shrink-0 cursor-pointer gap-3 rounded-md border border-white/100 p-3 text-white bg-white dark:bg-[#343541] py-2 px-4 hover:opacity-50  md:mb-0 md:mt-2 "
+                    className=" mt-1 flex w-[190px] flex-shrink-0 cursor-pointer gap-3 rounded-md border border-white/100 p-3 text-white bg-[#1c96a3] dark:bg-[#343541] py-2 px-4 hover:opacity-50  md:mb-0 md:mt-2 "
                     onClick={() => {
                       if(onOverRide) onOverRide(message);
                       
@@ -232,7 +232,7 @@ export const ChatMessage: FC<Props> = memo(
                   </button>
 
                   <button
-                    className=" mt-1 ml-3 flex w-[190px] flex-shrink-0 cursor-pointer gap-3 rounded-md border border-white/100 p-3 text-white bg-white dark:bg-[#343541] py-2 px-4 hover:opacity-50  md:mb-0 md:mt-2 "
+                    className=" mt-1 ml-3 flex w-[190px] flex-shrink-0 cursor-pointer gap-3 rounded-md border border-white/100 p-3 text-white bg-[#1c96a3] dark:bg-[#343541] py-2 px-4 hover:opacity-50  md:mb-0 md:mt-2 "
                     onClick={() => {
                       if(onRequestApproval && selectedConversation) onRequestApproval(selectedConversation?.id);
                     }}
