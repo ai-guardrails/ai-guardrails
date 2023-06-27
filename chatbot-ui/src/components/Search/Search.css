@@ -1,0 +1,5 @@
+.custom-focus-box-shadow:focus {
+   box-shadow: #18B4EA 0px 0px 2px 1px;
+    outline:none;
+   border: 1px solid #18B4EA ;
+  }
