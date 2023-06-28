@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import { Button } from "@mui/material";
 import { CustomDataGrid } from "../DataGrids/CustomDataGrid";
 import UploadOutlinedIcon from "@mui/icons-material/UploadOutlined";
@@ -6,6 +6,8 @@ import { uploadDocuments } from "@/services";
 import toast from "react-hot-toast";
 
 export const PrivateDocuments = () => {
+  const [ refereshGridData, setRefereshGridData ] = useState<boolean>(true)
+
   const handleDocumentsUpload = async (
     event: ChangeEvent<HTMLInputElement>
   ) => {
@@ -28,9 +30,11 @@ export const PrivateDocuments = () => {
       },
       {
         position: "bottom-center",
-      }
-    );
-    event.target.value = "";
+      })
+      .then(()=>{
+        setRefereshGridData(!refereshGridData);
+        event.target.value = "";
+      })
   };
 
   const columns = [
@@ -73,6 +77,7 @@ export const PrivateDocuments = () => {
         columns={columns}
         entity={entity}
         initialSort={initialSort}
+        refereshGridData={refereshGridData}
       />
     </>
   );

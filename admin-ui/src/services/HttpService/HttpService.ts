@@ -9,7 +9,7 @@ const _axios: AxiosInstance = axios.create({
 const handleSuccess = (response: any) => response;
 
 const handleError = (error: any) => {
-  if (error.response.status === 401) {
+  if (error?.response?.status === 401) {
     AuthService.doLogout();
   }
   return Promise.reject(error);

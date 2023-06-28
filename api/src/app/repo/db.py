@@ -1,6 +1,7 @@
 import ssl
 import pymongo
 import certifi
+from utils.apiResponse import ApiResponse
 from globals import *
 
 uri = Globals.mongo_uri
@@ -69,85 +70,144 @@ class conversation_context:
     #conversation_logs admin-ui
 
     def get_conversation_list(sort, range_, filter_):
+        response=ApiResponse()
+        try:
+            #sort
+            sort_list = eval(sort)
+            sort_field_name = sort_list[0]
+            sort_value = 1 if sort_list[1] == "asc" else -1
 
-        #sort
-        sort_list = eval(sort)
-        sort_field_name = sort_list[0]
-        sort_value = 1 if sort_list[1] == "asc" else -1
+            #range
+            range_list = eval(range_)
+            start = range_list[0]
+            end = range_list[1]
 
-        #range
-        range_list = eval(range_)
-        start = range_list[0]
-        end = range_list[1]
+            #filter
+            filter_list = eval(filter_)
+            filter_parameter = {}
+            if(len(filter_list)!=0):
+                filter_parameter = get_filter_parameter(filter_list)
+            
+            cursor=conversations_collection.find(filter_parameter).sort(sort_field_name,sort_value).hint([(sort_field_name,sort_value)]).skip(start).limit(end-start+1)
+            rows = []
+            for conversation in cursor:
+                #changing key _id to id because data-grid in admin-ui expects id
+                id=conversation['_id']
+                conversation.pop('_id')
+                conversation['id'] = id
+                rows.append(conversation)
+            response.update(True,"Successfully retrieved the data",rows)
+        except Exception as ex:
+            print(f"Exception while getting list: {ex}")
+            response.update(False,"Error in retrieving the data",None)
 
-        #filter
-        filter_list = eval(filter_)
-        filter_parameter = {}
-        if(len(filter_list)!=0):
-            filter_parameter = get_filter_parameter(filter_list)
-
-        return conversations_collection.find(filter_parameter).sort(sort_field_name,sort_value).hint([(sort_field_name,sort_value)]).skip(start).limit(end-start+1)
+        return response.json()
 
 
 
     def get_conversation_list_count(filter_):
-        filter_list = eval(filter_)
-        filter_parameter = {}
-        if(len(filter_list)!=0):
-            filter_parameter = get_filter_parameter(filter_list)
+        response=ApiResponse()
+        try:
+            filter_list = eval(filter_)
+            filter_parameter = {}
+            if(len(filter_list)!=0):
+                filter_parameter = get_filter_parameter(filter_list)
+            
+            data= conversations_collection.count_documents(filter_parameter)
+            response.update(True,"Successfully retrieved the data",data)
         
-        return conversations_collection.count_documents(filter_parameter)
-    
+        except Exception as ex:
+            print(f"Exception while getting list: {ex}")
+            response.update(False,"Error in retrieving the data",None)
+        return response.json()
+        
     def get_conversation_approval_requests(user_email, sort, range_, filter_):
+        response=ApiResponse()
+        try:
+                
+            #sort
+            sort_list = eval(sort)
+            sort_field_name = sort_list[0]
+            sort_value = 1 if sort_list[1] == "asc" else -1
 
-        #sort
-        sort_list = eval(sort)
-        sort_field_name = sort_list[0]
-        sort_value = 1 if sort_list[1] == "asc" else -1
+            #range
+            range_list = eval(range_)
+            start = range_list[0]
+            end = range_list[1]
 
-        #range
-        range_list = eval(range_)
-        start = range_list[0]
-        end = range_list[1]
+            #filter
+            filter_list = eval(filter_)
+            filter_parameter = {}
+            if(len(filter_list)!=0):
+                filter_parameter = get_filter_parameter(filter_list)
 
-        #filter
-        filter_list = eval(filter_)
-        filter_parameter = {}
-        if(len(filter_list)!=0):
-            filter_parameter = get_filter_parameter(filter_list)
+            conditions = {
+                "$and": [
+                    { "state":"waiting for approval", 'assigned_to': { "$in": [user_email] } },
+                    filter_parameter
+                ]
+            }
 
-        conditions = {
-            "$and": [
-                { "state":"waiting for approval", 'assigned_to': { "$in": [user_email] } },
-                filter_parameter
-            ]
-        }
-
-        return conversations_collection.find(conditions).sort(sort_field_name,sort_value).hint([(sort_field_name,sort_value)]).skip(start).limit(end-start+1)
-
+            cursor = conversations_collection.find(conditions).sort(sort_field_name,sort_value).hint([(sort_field_name,sort_value)]).skip(start).limit(end-start+1)
+            rows = []
+            for conversation in cursor:
+                #changing key _id to id because data-grid in admin-ui expects id
+                id=conversation['_id']
+                conversation.pop('_id')
+                conversation['id'] = id
+                rows.append(conversation)
+            response.update(True,"Successfully retrieved the data",rows)
+        
+        except Exception as ex:
+            print(f"Exception while getting list: {ex}")
+            response.update(False,"Error in retrieving the data",None)
+        return response.json()
 
     def get_conversation_approval_requests_count(user_email, filter_):
-        filter_list = eval(filter_)
-        filter_parameter = {}
-        if(len(filter_list)!=0):
-            filter_parameter = get_filter_parameter(filter_list)
+        response=ApiResponse()
+        try:
+            filter_list = eval(filter_)
+            filter_parameter = {}
+            if(len(filter_list)!=0):
+                filter_parameter = get_filter_parameter(filter_list)
 
-        conditions = {
-            "$and": [
-                { "state":"waiting for approval", 'assigned_to': { "$in": [user_email] } },
-                filter_parameter
-            ]
-        }
+            conditions = {
+                "$and": [
+                    { "state":"waiting for approval", 'assigned_to': { "$in": [user_email] } },
+                    filter_parameter
+                ]
+            }
 
-        return conversations_collection.count_documents(conditions)
+            data= conversations_collection.count_documents(conditions)
+            response.update(True,"Successfully retrieved the data",data)
+        
+        except Exception as ex:
+            print(f"Exception while getting list: {ex}")
+            response.update(False,"Error in retrieving the data",None)
+        return response.json()
 
 
     def approve_escalation(conversation_id):
-        conversations_collection.update_one({"_id":conversation_id}, {"$set":{"state":"active"}})
+        response = ApiResponse()
+        try:
+            conversations_collection.update_one({"_id":conversation_id}, {"$set":{"state":"active"}})
+            response.update(True,"Successfully approved",None)
+            
+        except Exception as ex:
+            print(f"Exception while getting list: {ex}")
+            response.update(False,"Error in approving",None)
+        return response.json()
 
     def reject_escalation(conversation_id):
-        print("farhan")
-        conversations_collection.update_one({"_id":conversation_id}, {"$set":{"state":"locked","archived":True}})
+        response = ApiResponse()
+        try:
+            conversations_collection.update_one({"_id":conversation_id}, {"$set":{"state":"locked","archived":True}})
+            response.update(True,"Successfully rejected",None)
+            
+        except Exception as ex:
+            print(f"Exception while getting list: {ex}")
+            response.update(False,"Error in rejecting",None)
+        return response.json()
 
 
 

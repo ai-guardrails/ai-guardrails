@@ -36,18 +36,6 @@ def require_role(role_name):
 def superset_token():
     return superset.get_guest_token()
 
-@adminendpoints.route('/getorg')
-@oidc.accept_token(require_token=True)
-def getOrgDetails():
-    return admin_service.get_org()
-
-
-@adminendpoints.route('/saveorg', methods=['POST'])
-@oidc.accept_token(require_token=True)
-def saveOrgDetails():
-    request_data = request.get_json()
-    return admin_service.save_org(request_data)
-
 #predefinedrules get_list, get, put endpoints
 @adminendpoints.route('/predefined_rules', methods=['GET'])
 @oidc.accept_token(require_token=True)
@@ -182,8 +170,8 @@ def approvalrequests_get_list():
 def approve_escalation(conversation_id):
     #email of user whose conversation is escalated recieving from admin-ui
     user_email = request.json
-    admin_service.approve_escalation( conversation_id, user_email )
-    return {"result":"success"},200
+    data=admin_service.approve_escalation( conversation_id, user_email )
+    return jsonify(data),200
 
 @adminendpoints.route('/reject_escalation/<conversation_id>', methods=['PUT'])
 @oidc.accept_token(require_token=True)
@@ -191,5 +179,5 @@ def approve_escalation(conversation_id):
 def reject_escalation(conversation_id):
     #email of user whose conversation is escalated recieving from admin-ui
     user_email = request.json
-    admin_service.reject_escalation( conversation_id, user_email )
-    return {"result":"success"},200
+    data=admin_service.reject_escalation( conversation_id, user_email )
+    return jsonify(data),200

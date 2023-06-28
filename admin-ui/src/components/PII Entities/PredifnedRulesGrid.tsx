@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { CustomDataGrid } from "../DataGrids/CustomDataGrid";
 import Switch from '@mui/material/Switch';
 import { updateGridData } from "@/services";
+import toast from "react-hot-toast";
 
 interface Row {
   id: string;
@@ -28,8 +29,12 @@ export const PredefinedRulesGrid = () => {
       const response = await updateGridData('predefined_rules', id, { is_active: updatedStates[id] });
       setSwitchStates(updatedStates);
     }
-    catch(error){
+    catch(error:any){
       console.log(error);
+      toast.error(error?.message,{
+        duration:3000,
+        position:"bottom-center"
+      })
     }
   };
 
