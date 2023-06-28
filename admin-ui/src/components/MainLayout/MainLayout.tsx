@@ -89,16 +89,10 @@ export const MainLayout = () => {
       <Box sx={{ display: 'flex', overflow: 'hidden' }}>
         <AppBar
           position="fixed"
-          // open={open}
           sx={{
-            color:'#18B4EA',
-            
-           backgroundColor: '#8EC5FC',
-            backgroundImage: "linear-gradient(270.35deg, #FFFFFF 73.58%, #D9F5FC 104.58%)"
-            ,
-            '& .MuiChip-labelSmall': {
-              color: 'yellow',
-              }, }}>
+            backgroundColor: '#8EC5FC',
+            backgroundImage: "linear-gradient(270.35deg, #FFFFFF 73.58%, #D9F5FC 104.58%)", 
+          }}>
           <Toolbar>
             <IconButton
               color="inherit"
@@ -111,7 +105,7 @@ export const MainLayout = () => {
             </IconButton>
             
             <SvgPodiumLogo style={{ height: '36px', width: '36px', marginLeft: '10px',marginRight:'10px' }}/>
-            <Typography variant="h6" noWrap component="div" sx={{fontSize:'15px',marginRight:'5px'  }}>
+            <Typography variant="h6" noWrap component="div" sx={{fontSize:'15px',marginRight:'5px',color:"#18B4EA"}}>
               Podium
             </Typography>
             <Typography variant="h6" noWrap component="div" sx={{fontSize:'16px' ,color:'#75777A',
@@ -123,11 +117,11 @@ export const MainLayout = () => {
                 label="Beta"
                 variant="outlined"
                 size="small"
-                style={{ borderColor: '#e5df18', color: '#e5df18', marginLeft: '5px',marginRight:'5px' }}
+                style={{ borderColor: '#F86F03', color: '#F86F03', marginLeft: '5px',marginRight:'5px' }}
               />
             </Typography>
-            <Divider orientation="vertical" variant="middle" flexItem sx={{ background: 'white' ,opacity:'50%'}} />
-            <Divider orientation="vertical" variant="middle" flexItem sx={{ background: 'white',marginLeft: 'auto',opacity:'50%' }} />
+            <Divider orientation="vertical" variant="middle" flexItem sx={{ background: 'white'}} />
+            <Divider orientation="vertical" variant="middle" flexItem sx={{ background: 'white',marginLeft: 'auto'}} />
             <Button
               sx={{ position:'flex-end', border: '1px',marginLeft:'5px'}}
               onClick={authContext.logout}

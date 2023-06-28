@@ -345,7 +345,7 @@ export const ChatInput = ({
 
         <div className="relative mx-2 flex w-full flex-grow flex-col rounded-md border border-black/10 bg-white shadow-[0_0_10px_rgba(0,0,0,0.10)] dark:border-gray-900/50 dark:bg-[#40414F] dark:text-white dark:shadow-[0_0_15px_rgba(0,0,0,0.10)] sm:mx-4">
           <button
-            className="absolute left-2 top-2 rounded-sm p-1 text-neutral-800 opacity-60 hover:bg-neutral-200 dark:bg-opacity-50 dark:text-neutral-100 dark:hover:text-neutral-200 text-[#18B4EA]"
+            className="absolute left-2 top-2 rounded-sm p-1 text-[#18B4EA] opacity-60 hover:bg-[#d8f5ff] dark:bg-opacity-50 dark:text-neutral-100 dark:hover:text-neutral-200"
             onClick={() => toggleShowPluginSelect() }
             onKeyDown={(e) => { }}
             style={{opacity: selectedConversation?.messages?.length!=0? "10%" : ""}}
@@ -400,7 +400,7 @@ export const ChatInput = ({
           />
 
           <button
-            className="absolute right-2 top-2 rounded-sm p-1 text-[#18B4EA] opacity-60 hover:bg-neutral-200 dark:bg-opacity-50 dark:text-neutral-100 dark:hover:text-neutral-200"
+            className="absolute right-2 top-2 rounded-sm p-1 text-[#18B4EA] opacity-60 hover:bg-[#d8f5ff] dark:bg-opacity-50 dark:text-neutral-100 dark:hover:text-neutral-200"
             onClick={handleSend}
           >
             {messageIsStreaming ? (
@@ -413,7 +413,7 @@ export const ChatInput = ({
           {showScrollDownButton && (
             <div className="absolute bottom-12 right-0 lg:bottom-0 lg:-right-10">
               <button
-                className="flex h-7 w-7 items-center justify-center rounded-full bg-neutral-300 text-gray-800 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-neutral-200"
+                className="flex h-7 w-7 items-center justify-center rounded-full text-[#18B4EA] border border-2 border-[#18B4EA]/80 hover:bg-[#d8f5ff] shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-neutral-200"
                 onClick={onScrollDownClick}
               >
                 <IconArrowDown size={18} />

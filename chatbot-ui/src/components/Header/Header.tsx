@@ -6,7 +6,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-
+const applicationName: string = import.meta.env.VITE_APPLICATION_NAME;
 import SvgPodiumLogo from "./SvgPodiumLogo";
 
 export const Header = () => {
@@ -34,7 +34,7 @@ export const Header = () => {
           component="div"
           sx={{ fontSize: "16px", color: "#75777A", fontWeight: "600" }}
         >
-          {"Ai Gaurdrails"}
+          {applicationName}
         </Typography>
         <Typography variant="subtitle2" component="span">
           <Chip

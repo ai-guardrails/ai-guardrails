@@ -68,7 +68,7 @@ const Sidebar = <T,>({
           { !isArhiveView && itemDisplayName !== 'Archive' ?  ( 
             <>
           <button
-            className="text-sidebar flex w-[190px] flex-shrink-0 cursor-pointer select-none items-center gap-3 bg-[#1c96a3] hover:bg-[#23b4c3] rounded-md border border-white/20 p-3 text-white transition-colors duration-200 hover:bg-gray-500/10"
+            className="text-sidebar flex w-[190px] flex-shrink-0 cursor-pointer select-none items-center gap-3 bg-[#1c96a3] hover:bg-[#23b4c3] rounded-md border border-white/20 p-3 text-white transition-colors duration-200"
             onClick={() => {
               handleCreateItem();
               handleSearchTerm('');
@@ -79,7 +79,7 @@ const Sidebar = <T,>({
           </button>
 
           <button
-            className="ml-2 flex flex-shrink-0 cursor-pointer  hover:bg-[#d8f5ff] items-center gap-3 text-[#1c96a3] rounded-md border border-2 border-[#1c96a3]/80 p-3 text-sm text-white transition-colors duration-200 hover:bg-gray-500/10"
+            className="ml-2 flex flex-shrink-0 cursor-pointer  hover:bg-[#d8f5ff] items-center gap-3 text-[#1c96a3] rounded-md border border-2 border-[#1c96a3]/80 p-3 text-sm transition-colors duration-200"
             onClick={handleCreateFolder}
           >
             <IconFolderPlus size={16} />

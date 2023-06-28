@@ -388,14 +388,12 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
   return (
     <div className="relative flex-1 overflow-hidden bg-white dark:bg-[#343541]">
       <>
-        <>
-          <Header/>
-        </>
         <div
           className="max-h-full overflow-x-hidden"
           ref={chatContainerRef}
           onScroll={handleScroll}
         >
+          <Header/>
           {selectedConversation?.messages.length === 0 ? (
             <>
               <div className="mx-auto flex flex-col space-y-5 md:space-y-10 px-3 pt-5 md:pt-12 sm:max-w-[600px]">
@@ -516,6 +514,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           onSend={(message, plugin) => {
             setCurrentMessage(message);
             handleSend(message, 0, plugin);
+            handleScroll();
           }}
           onScrollDownClick={handleScrollDown}
           onRegenerate={() => {
