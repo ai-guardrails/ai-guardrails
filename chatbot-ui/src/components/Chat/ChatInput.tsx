@@ -42,6 +42,8 @@ interface Props {
   stopConversationRef: MutableRefObject<boolean>;
   textareaRef: MutableRefObject<HTMLTextAreaElement | null>;
   showScrollDownButton: boolean;
+  plugin:Plugin;
+  setPlugin:Function;
 }
 const applicationName: string = import.meta.env.VITE_APPLICATION_NAME;
 
@@ -52,6 +54,8 @@ export const ChatInput = ({
   stopConversationRef,
   textareaRef,
   showScrollDownButton,
+  plugin,
+  setPlugin
 
 }: Props) => {
   const {
@@ -68,8 +72,7 @@ export const ChatInput = ({
   const [variables, setVariables] = useState<string[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [showPluginSelect, setShowPluginSelect] = useState(false);
-  const [plugin, setPlugin] = useState<Plugin>(PluginList[0]);
-
+  
   const [analysisResponse, setAnalysisResponse] = useState<AnalysisObject[]>(
     []
   );
@@ -121,7 +124,11 @@ export const ChatInput = ({
           }
         }
       })
-      .catch((err) => {
+      .catch((err:any) => {
+        toast.error(err.message,{
+          position:"bottom-right",
+          duration:3000
+        })
         console.log(err.message, "API ERROR");
       })
       .finally(() => { });

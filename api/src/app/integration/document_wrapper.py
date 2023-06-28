@@ -12,7 +12,6 @@ class document_wrapper:
             url = Globals.document_api_url
             payload = json.dumps({
                 "query": messages[-1]['content'],
-                "model_type": "OpenAI"
             })
             
             headers = {

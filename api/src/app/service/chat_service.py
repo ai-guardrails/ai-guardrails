@@ -136,7 +136,7 @@ class chat_service:
                             })
                         yield (chunk)
                 response.close()
-            else:
+            elif(model =="private-docs"):
                 try:
                     logging.info("calling document completion")
                     res = document_wrapper.document_completion(messages,token)
@@ -155,7 +155,9 @@ class chat_service:
                 except Exception as e:
                     yield("Sorry. Some error occured. Please try again.")
                     logging.error("error: "+str(e))
-        
+            else:
+                yield (json.dumps({"error": "Invalid model type"}))
+                
             chat_service.save_chat_log(current_user_email, anonymized_prompt)
             chat_service.update_conversation(conversation_id,current_completion,'assistant',current_user_email,model)
         except Exception as e:

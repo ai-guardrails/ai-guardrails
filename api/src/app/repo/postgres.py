@@ -93,6 +93,96 @@ class SqlAudits:
     """
     Class to handle all the SQL queries for the audits.
     """
+    def insert_analysis_audits(text, user_email, flagged_text, analysed_entity, criticality):
+        """
+        Inserts the analysis audit into the database.
+        :param text: The text that was analysed.
+        :param user_email: The email of the user that performed the analysis.
+        :param flagged_text: The text that was flagged.
+        :param analysed_entity: The entity that was analysed.
+        :param criticality: The criticality of the flagged text.
+        :return: Returns nothing.
+        """
+        global connection_pool
+        if connection_pool:
+            conn = connection_pool.getconn()
+            try:
+                cursor = conn.cursor()
+                cursor.execute(
+                    analysis_insert_query,
+                    (text, user_email, flagged_text, analysed_entity, criticality),
+                )
+            except Exception as ex:
+                print(f"Exception while inserting analysis audit: {ex}")
+            finally:
+                connection_pool.putconn(conn)
+
+
+    def insert_anonymize_audits(original_text, anonymized_text, flagged_text, user_email, analysed_entity, criticality):
+        """
+        Inserts the anonymize audit into the database.
+        :param original_text: The original text.
+        :param anonymized_text: The anonymized text.
+        :param flagged_text: The text that was flagged.
+        :param user_email: The email of the user that performed the analysis.
+        :param analysed_entity: The entity that was analysed.
+        :param criticality: The criticality of the flagged text.
+        :return: Returns nothing.
+        """
+        global connection_pool
+        if connection_pool:
+            conn = connection_pool.getconn()
+            try:
+                cursor = conn.cursor()
+                cursor.execute(
+                    anonymize_insert_query, (original_text, anonymized_text,
+                                            flagged_text, user_email, analysed_entity, criticality)
+                )
+            except Exception as ex:
+                print(f"Exception while inserting anonymize audit: {ex}")
+            finally:
+                connection_pool.putconn(conn)
+
+
+    def insert_chat_log(user_email, text):
+        """
+        Inserts the chat log into the database.
+        :param user_email: The email of the user that performed the analysis.
+        :param text: The text that was sent.
+        :return: Returns nothing.
+        """
+        global connection_pool
+        if connection_pool:
+            conn = connection_pool.getconn()
+            try:
+                cursor = conn.cursor()
+                cursor.execute(
+                    chat_log_insert_query, (user_email, text)
+                )
+            except Exception as ex:
+                print(f"Exception while inserting chat log: {ex}")
+            finally:
+                connection_pool.putconn(conn)
+
+
+    def get_chat_log():
+        """
+        Gets the chat logs from the database.
+        :return: Returns the chat logs as a json object.
+        """
+        data = None
+        global connection_pool
+        if connection_pool:
+            conn = connection_pool.getconn()
+            try:
+                cursor = conn.cursor()
+                cursor.execute(f'''SELECT * FROM {pg_schema}.chat_log''')
+                data = cursor.fetchall()
+            except Exception as ex:
+                print(f"Exception while getting chat log: {ex}")
+            finally:
+                connection_pool.putconn(conn)
+        return json.dumps(data, indent=4, sort_keys=True, default=str)
     
     # Admin APIs below
     # def get_org():
