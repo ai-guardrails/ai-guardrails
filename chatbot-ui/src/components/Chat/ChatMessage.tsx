@@ -8,7 +8,11 @@ import {
   IconShieldExclamation,
 } from "@tabler/icons-react";
 import { FC, memo, useContext, useEffect, useRef, useState } from "react";
-
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import { updateConversation } from "@/utils/app/conversation";
 
 import { Conversation, Message } from "@/types/chat";
@@ -31,7 +35,7 @@ export interface Props {
 }
 
 export interface AssistantProps {
-  message: Message;
+  content: string;
   messageIndex: number;
   messageIsStreaming: boolean;
   selectedConversation: Conversation|undefined;
@@ -136,6 +140,18 @@ export const ChatMessage: FC<Props> = memo(
         textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
       }
     }, [isEditing]);
+
+    const [value, setValue] = useState('1');
+
+      const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        setValue(newValue);
+      };
+
+      const style={
+        padding: '1.5em 0px 0px 0px',
+        fontFamily: "'Inter', sans-serif",
+        fontWeight: 500,
+        }
 
     return (
       <div
@@ -253,7 +269,44 @@ export const ChatMessage: FC<Props> = memo(
               </>
             ) : (
               <div className="flex flex-row">
-                <AssistantMessage message={message} messageIndex={messageIndex} messageIsStreaming={messageIsStreaming} selectedConversation={selectedConversation} />
+                {message.msg_info?
+                 <Box sx={{ width: '100%', typography: 'body1'}}>
+                 <TabContext value={value}>
+                  <Box sx={{ borderBottom: 1, borderColor: 'divider' ,color:'white' ,}}>
+                    <TabList onChange={handleChange} aria-label="lab API tabs example"
+                      sx={{
+                        '& .MuiTab-root': {
+                          fontFamily: "'Inter', sans-serif", // Set the font-family
+                          fontWeight: 500,
+                          color: '#202123',
+                          textTransform: 'Capitalize',
+                          paddingTop: '0px',
+                          fontSize: '15px',
+                          
+                        },
+                        '& .Mui-selected': {
+                          color: 'white',
+                        },
+                        '& .MuiTabs-indicator': {
+                          backgroundColor: 'white',
+                        },
+                        
+                      }}>
+                      <Tab label="Content" value="1" />
+                      <Tab label="Sources" value="2" />
+                    </TabList>
+                  </Box>
+                  <TabPanel value="1" sx={style}>
+                    <AssistantMessage content={message.content} messageIndex={messageIndex} messageIsStreaming={messageIsStreaming} selectedConversation={selectedConversation} />
+                  </TabPanel>
+                  <TabPanel value="2" sx={style}>
+                      {message.msg_info?.source}
+                  </TabPanel>
+                </TabContext>
+                </Box>
+                :
+                  <AssistantMessage content={message.content} messageIndex={messageIndex} messageIsStreaming={messageIsStreaming} selectedConversation={selectedConversation} />
+                }
 
                 <div className="md:-mr-8 ml-1 md:ml-0 flex flex-col md:flex-row gap-4 md:gap-1 items-center md:items-start justify-end md:justify-start">
                   {messagedCopied ? (
@@ -281,7 +334,7 @@ export const ChatMessage: FC<Props> = memo(
 
 
 
-export const AssistantMessage:FC<AssistantProps> = ({ message, messageIndex ,messageIsStreaming,selectedConversation }) => {
+export const AssistantMessage:FC<AssistantProps> = ({ content, messageIndex ,messageIsStreaming,selectedConversation }) => {
   return (
     <MemoizedReactMarkdown
                   className="prose dark:prose-invert flex-1"
@@ -342,7 +395,7 @@ export const AssistantMessage:FC<AssistantProps> = ({ message, messageIndex ,mes
                     },
                   }}
                 >
-                  {`${message.content}${
+                  {`${content}${
                     messageIsStreaming &&
                     messageIndex ==
                       (selectedConversation?.messages.length ?? 0) - 1

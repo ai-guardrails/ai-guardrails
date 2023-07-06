@@ -114,7 +114,6 @@ class chat_service:
                         if res['sources']:
                             sources = res['sources'][0]
                             source = json.loads(sources)['metadata']['source'].split('/')[-1]
-                            answer = answer + "  \n  \n" + "Source: " + source  #adding double space + \n because ReactMarkdown in chatbot-ui needs this for next line
                         msg_info={
                             "source": source,
                         }

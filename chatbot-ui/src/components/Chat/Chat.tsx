@@ -437,7 +437,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                 </div>
                 <div className='flex gap-10'>
                   {PluginList.map((plug, index) => (
-                    <div className={`flex flex-col w-full gap-5 justify-center text-black  rounded-lg border border-neutral-200 p-4 dark:text-gray-400 dark:border-neutral-600 hover:bg-[#595959] dark:hover:bg-[#202123] cursor-pointer ${ plugin === PluginList[index] && 'bg-[#595959] dark:bg-[#202123]'}`}
+                    <div key={plug.id} className={`flex flex-col w-full gap-5 justify-center text-black  rounded-lg border border-neutral-200 p-4 dark:text-gray-400 dark:border-neutral-600 hover:bg-[#595959] dark:hover:bg-[#202123] cursor-pointer ${ plugin === PluginList[index] && 'bg-[#595959] dark:bg-[#202123]'}`}
                       onClick={(e)=>{handleModelSelect(PluginList[index])}}
                     >
                       <div className='flex justify-center'>
