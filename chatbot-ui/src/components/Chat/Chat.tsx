@@ -179,7 +179,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           let done = false;
           let isFirst = true;
           let text = '';
-          let msg_info;
+          let msg_info = null;
           let role;
           while (!done) {
             if (stopConversationRef.current === true) {
@@ -291,7 +291,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     homeDispatch({ field: 'messageIsStreaming', value: true });
 
     let { data } = await requestApproval(conversationId)
-    let message: Message = { role: "guardrails", content: data.message,msg_info:{}, userActionRequired: false };
+    let message: Message = { role: "guardrails", content: data.message, msg_info:null, userActionRequired: false };
 
     let updatedConversation = {
       ...selectedConversation,

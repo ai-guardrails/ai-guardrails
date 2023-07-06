@@ -11,7 +11,7 @@ import { FC, memo, useContext, useEffect, useRef, useState } from "react";
 
 import { updateConversation } from "@/utils/app/conversation";
 
-import { Message } from "@/types/chat";
+import { Conversation, Message } from "@/types/chat";
 
 import HomeContext from "@/pages/home/home.context";
 
@@ -28,6 +28,13 @@ export interface Props {
   onEdit?: (editedMessage: Message) => void;
   onOverRide?: (selectedMessage: Message) => void;
   onRequestApproval?: (conversationId: string) => void;
+}
+
+export interface AssistantProps {
+  message: Message;
+  messageIndex: number;
+  messageIsStreaming: boolean;
+  selectedConversation: Conversation|undefined;
 }
 
 export const ChatMessage: FC<Props> = memo(
@@ -246,7 +253,37 @@ export const ChatMessage: FC<Props> = memo(
               </>
             ) : (
               <div className="flex flex-row">
-                <MemoizedReactMarkdown
+                <AssistantMessage message={message} messageIndex={messageIndex} messageIsStreaming={messageIsStreaming} selectedConversation={selectedConversation} />
+
+                <div className="md:-mr-8 ml-1 md:ml-0 flex flex-col md:flex-row gap-4 md:gap-1 items-center md:items-start justify-end md:justify-start">
+                  {messagedCopied ? (
+                    <IconCheck
+                      size={20}
+                      className="text-green-500 dark:text-green-400"
+                    />
+                  ) : (
+                    <button
+                      className="invisible group-hover:visible focus:visible text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                      onClick={copyOnClick}
+                    >
+                      <IconCopy size={20} />
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+);
+
+
+
+export const AssistantMessage:FC<AssistantProps> = ({ message, messageIndex ,messageIsStreaming,selectedConversation }) => {
+  return (
+    <MemoizedReactMarkdown
                   className="prose dark:prose-invert flex-1"
                   remarkPlugins={[remarkGfm, remarkMath]}
                   rehypePlugins={[rehypeMathjax]}
@@ -313,28 +350,7 @@ export const ChatMessage: FC<Props> = memo(
                       : ""
                   }`}
                 </MemoizedReactMarkdown>
+  )
+}
 
-                <div className="md:-mr-8 ml-1 md:ml-0 flex flex-col md:flex-row gap-4 md:gap-1 items-center md:items-start justify-end md:justify-start">
-                  {messagedCopied ? (
-                    <IconCheck
-                      size={20}
-                      className="text-green-500 dark:text-green-400"
-                    />
-                  ) : (
-                    <button
-                      className="invisible group-hover:visible focus:visible text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-                      onClick={copyOnClick}
-                    >
-                      <IconCopy size={20} />
-                    </button>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-);
 ChatMessage.displayName = "ChatMessage";

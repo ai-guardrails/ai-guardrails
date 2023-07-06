@@ -180,10 +180,11 @@ export const Home = () => {
   
   const handleSelectConversation = (conversation: Conversation) => {
     fetchConversationById(conversation.id).then((res) => {
-      conversation.messages = res.data.messages.map((message: { role: any; content: any; user_action_required: any; }) => ({
+      conversation.messages = res.data.messages.map((message: { role: any; content: any; user_action_required: any; msg_info:any }) => ({
         role: message.role,
         content: message.content,
-        userActionRequired: message.user_action_required
+        userActionRequired: message.user_action_required,
+        msg_info: message.msg_info
       }));;
       dispatch({
         field: "selectedConversation",

@@ -10,7 +10,7 @@ from integration.nsfw_model_wrapper import NSFWModelWrapper
 from integration.keycloak_wrapper import keycloak_wrapper
 from service.pii_service import pii_service
 import uuid
-from typing import TypedDict
+from typing import TypedDict,Optional
 from datetime import datetime
 import json
 import requests
@@ -38,7 +38,7 @@ class message_obj(TypedDict):
     created: datetime
     children: list
     user_action_required: bool
-    msg_info: dict
+    msg_info: Optional[dict]
 
 
 class chat_service:
@@ -61,12 +61,13 @@ class chat_service:
                 conversation_id = data['conversation_id']
                 manage_conversation_context = True
 
-            msg_info = {}
+
             stop_conversation,stop_response,updated_prompt,role = chat_service.validate_prompt(prompt,isOverride,piiScan,nsfwScan,current_user_email,conversation_id)
-            chat_service.update_conversation(conversation_id,updated_prompt,'user',current_user_email,model,msg_info)
+            chat_service.update_conversation(conversation_id,updated_prompt,'user',current_user_email,model)
             
             current_completion = ''
             user_action_required = False
+            msg_info = None
 
             if stop_conversation:
 
@@ -190,7 +191,7 @@ class chat_service:
         new_conversation_id = conversation_context.insert_conversation(conversation)
         return new_conversation_id
 
-    def update_conversation(conversation_id, content, role,user_email, model ,msg_info, user_action_required = False):
+    def update_conversation(conversation_id, content, role,user_email, model ,msg_info=None, user_action_required = False):
         conversation = conversation_context.get_conversation_by_id(conversation_id,user_email)
         if(conversation == None):
             chat_service.create_Conversation(content,user_email,model,msg_info,conversation_id)

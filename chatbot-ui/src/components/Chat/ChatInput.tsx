@@ -143,7 +143,7 @@ export const ChatInput = ({
       return;
     }
 
-    onSend({ role: "user", content: content , userActionRequired: false }, plugin);
+    onSend({ role: "user", content: content , msg_info: null, userActionRequired: false }, plugin);
     setContent("");
 
     if (window.innerWidth < 640 && textareaRef && textareaRef.current) {

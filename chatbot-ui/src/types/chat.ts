@@ -3,7 +3,7 @@ export interface Message {
   role: Role;
   content: string;
   userActionRequired: boolean;
-  msg_info:object
+  msg_info: object|null
 }
 
 export type Role = 'assistant' | 'user' | 'guardrails';
