@@ -38,6 +38,7 @@ class message_obj(TypedDict):
     created: datetime
     children: list
     user_action_required: bool
+    msg_info: dict
 
 
 class chat_service:
@@ -60,8 +61,9 @@ class chat_service:
                 conversation_id = data['conversation_id']
                 manage_conversation_context = True
 
+            msg_info = {}
             stop_conversation,stop_response,updated_prompt,role = chat_service.validate_prompt(prompt,isOverride,piiScan,nsfwScan,current_user_email,conversation_id)
-            chat_service.update_conversation(conversation_id,updated_prompt,'user',current_user_email,model)
+            chat_service.update_conversation(conversation_id,updated_prompt,'user',current_user_email,model,msg_info)
             
             current_completion = ''
             user_action_required = False
@@ -112,10 +114,13 @@ class chat_service:
                             sources = res['sources'][0]
                             source = json.loads(sources)['metadata']['source'].split('/')[-1]
                             answer = answer + "  \n  \n" + "Source: " + source  #adding double space + \n because ReactMarkdown in chatbot-ui needs this for next line
+                        msg_info={
+                            "source": source,
+                        }
                         chunk = json.dumps({
                                         "role": "assistant",
                                         "content": answer,
-                                        "sources": res['sources']
+                                        "msg_info": msg_info,
                                     })
                         yield (chunk)
                         current_completion += answer
@@ -126,7 +131,7 @@ class chat_service:
                     yield (json.dumps({"error": "Invalid model type"}))
                 
             chat_service.save_chat_log(current_user_email, updated_prompt)
-            chat_service.update_conversation(conversation_id,current_completion,role,current_user_email,model,user_action_required)
+            chat_service.update_conversation(conversation_id,current_completion,role,current_user_email,model,msg_info,user_action_required)
         except Exception as e:
             yield (json.dumps({"error": "error"}))
             logging.info("error: ", e)
@@ -159,13 +164,14 @@ class chat_service:
             logging.info("returning from pii")
             return stop_conversation,stop_response,updated_prompt,role
         
-    def create_Conversation(prompt,email,model,id=None,):
+    def create_Conversation(prompt,email,model,msg_info,id=None,):
         message = message_obj(
             id= str(uuid.uuid4()),
             role="user",
             content=prompt,
             created=datetime.now(),
             children=[],
+            msg_info=msg_info
         )
         
         messages = [message]
@@ -184,10 +190,10 @@ class chat_service:
         new_conversation_id = conversation_context.insert_conversation(conversation)
         return new_conversation_id
 
-    def update_conversation(conversation_id, content, role,user_email, model , user_action_required = False):
+    def update_conversation(conversation_id, content, role,user_email, model ,msg_info, user_action_required = False):
         conversation = conversation_context.get_conversation_by_id(conversation_id,user_email)
         if(conversation == None):
-            chat_service.create_Conversation(content,user_email,model,conversation_id)
+            chat_service.create_Conversation(content,user_email,model,msg_info,conversation_id)
             return
         if(model is None or not model):
             model = conversation['model']
@@ -198,7 +204,8 @@ class chat_service:
             content=content,
             created=datetime.now(),
             children=[],
-            user_action_required = user_action_required
+            user_action_required = user_action_required,
+            msg_info = msg_info
         )
 
        #find message with last node id

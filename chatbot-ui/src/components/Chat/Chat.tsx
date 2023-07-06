@@ -79,7 +79,6 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     async (message: Message, deleteCount = 0, plugin: Plugin , isOverRide:boolean = false) => {
       if (containsOnlyWhitespacesOrNewlines(message.content)) return;
       message.content = message.content.trim();
-      console.log(plugin)
       if(plugin.id === "gpt-3.5-turbo"){
         await anonymizeMessage(message.content)
         .then((res: any) => {
@@ -180,6 +179,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           let done = false;
           let isFirst = true;
           let text = '';
+          let msg_info;
           let role;
           while (!done) {
             if (stopConversationRef.current === true) {
@@ -204,6 +204,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                 else{
                   parsed = JSON.parse('{' + split[i] + '}');
                 }
+
                 if(parsed.content==undefined){
                   text='Sorry currently your request could not be fullfiled. Please try again.!';
                 }
@@ -211,6 +212,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
                   text += parsed.content;
                 }
+                msg_info = parsed.msg_info;
                 role = parsed.role;
               }
             } else{
@@ -221,6 +223,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
               else{
                 text += parsed.content;
               }
+              msg_info = parsed.msg_info;
               role = parsed.role;
               
             }
@@ -235,9 +238,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                   };
               });
               if(isOverRide){
-                updatedMessages.push({ role: 'guardrails', content: "You chose to Override the warning, proceeding to Open AI." , userActionRequired: false})
+                updatedMessages.push({ role: 'guardrails', content: "You chose to Override the warning, proceeding to Open AI." ,msg_info:msg_info, userActionRequired: false})
               }
-              updatedMessages.push({ role: role, content: text , userActionRequired: parsed.user_action_required})
+              updatedMessages.push({ role: role, content: text ,msg_info:msg_info, userActionRequired: parsed.user_action_required})
               updatedConversation = {
                 ...updatedConversation,
                 messages: updatedMessages,
@@ -288,7 +291,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     homeDispatch({ field: 'messageIsStreaming', value: true });
 
     let { data } = await requestApproval(conversationId)
-    let message: Message = { role: "guardrails", content: data.message, userActionRequired: false };
+    let message: Message = { role: "guardrails", content: data.message,msg_info:{}, userActionRequired: false };
 
     let updatedConversation = {
       ...selectedConversation,
