@@ -151,7 +151,7 @@ export const ChatMessage: FC<Props> = memo(
         padding: '1.5em 0px 0px 0px',
         fontFamily: "'Inter', sans-serif",
         fontWeight: 500,
-        }
+      }
 
     return (
       <div
@@ -277,14 +277,13 @@ export const ChatMessage: FC<Props> = memo(
                       sx={{
                         '& .MuiTab-root': {
                           fontFamily: "'Inter', sans-serif", // Set the font-family
-                          fontWeight: 500,
+                          fontWeight: 600,
                           color: '#202123',
                           textTransform: 'Capitalize',
                           paddingTop: '0px',
-                          fontSize: '15px',
                           
                         },
-                        '& .Mui-selected': {
+                        '& .MuiButtonBase-root.Mui-selected': {
                           color: 'white',
                         },
                         '& .MuiTabs-indicator': {
