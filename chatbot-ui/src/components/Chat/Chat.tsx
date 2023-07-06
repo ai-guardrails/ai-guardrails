@@ -401,6 +401,12 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     };
   }, [messagesEndRef]);
   
+    const tiles:  JSX.Element[] = [
+        <IconBolt size={80} />,
+        <IconBook size={80} />,
+    ];
+  
+
   return (
     <div className="relative flex-1 overflow-hidden bg-white dark:bg-[#343541]">
       <>
@@ -427,26 +433,18 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                   )}
                 </div>
                 <div className='flex gap-10'>
-                  <div className={`flex flex-col w-full gap-5 justify-center text-black  rounded-lg border border-neutral-200 p-4 dark:text-gray-400 dark:border-neutral-600 hover:bg-[#595959] dark:hover:bg-[#202123] cursor-pointer ${ plugin === PluginList[0] && 'bg-[#595959] dark:bg-[#202123]'}`}
-                    onClick={(e)=>{handleModelSelect(PluginList[0])}}
-                  >
-                    <div className='flex justify-center'>
-                      <IconBolt size={80} />
+                  {PluginList.map((plug, index) => (
+                    <div className={`flex flex-col w-full gap-5 justify-center text-black  rounded-lg border border-neutral-200 p-4 dark:text-gray-400 dark:border-neutral-600 hover:bg-[#595959] dark:hover:bg-[#202123] cursor-pointer ${ plugin === PluginList[index] && 'bg-[#595959] dark:bg-[#202123]'}`}
+                      onClick={(e)=>{handleModelSelect(PluginList[index])}}
+                    >
+                      <div className='flex justify-center'>
+                        {tiles[index]}
+                      </div>
+                      <div className='text-center '>
+                        {plug.name}
+                      </div>
                     </div>
-                    <div className='text-center '>
-                      Conversational Chatbot
-                    </div>
-                  </div>
-                  <div className={`flex flex-col w-full gap-5 justify-center text-black rounded-lg border border-neutral-200 p-4 dark:text-gray-400 dark:border-neutral-600 hover:bg-[#595959] dark:hover:bg-[#202123] cursor-pointer ${ plugin === PluginList[1] && 'bg-[#595959] dark:bg-[#202123]'}`}
-                    onClick={(e)=>{handleModelSelect(PluginList[1])}}
-                  >
-                    <div className='flex justify-center'>
-                      <IconBook size={80}/>
-                    </div>
-                    <div className='text-center'>
-                      Knowledge Mining on Private Docs
-                    </div>
-                  </div>
+                    ))}
                 </div>
                 <div className='w-full justify-center rounded-lg border border-neutral-200 p-4 dark:border-neutral-600'>
                     <PublicPrivateSwitch size={40}/>

@@ -39,3 +39,7 @@ export const getDocsGridData = (entity: string,params: any) => {
     .join("&");
   return _axios.get(`/${entity}?${stringParams}`);
 };
+
+export const deleteDocsGridData = (id: number) => {
+  return _axios.delete(`/documents/${id}`);
+}

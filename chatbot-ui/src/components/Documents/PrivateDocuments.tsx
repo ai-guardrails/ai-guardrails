@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from "react";
 import { Button } from "@mui/material";
 import { CustomDataGrid } from "./CustomDataGrid";
 import { IconUpload } from '@tabler/icons-react';
-import { uploadDocuments } from "@/services/DocsService";
+import { uploadDocuments ,deleteDocsGridData} from "@/services/DocsService";
 import toast from "react-hot-toast";
 
 export const PrivateDocuments = () => {
@@ -37,8 +37,41 @@ export const PrivateDocuments = () => {
       })
   };
 
+  function handleDelete(id:any) {
+    // Handle delete logic here
+    toast.promise(
+      deleteDocsGridData(id), //calling api here
+      {
+        loading: `Deleting Document`,
+        success: <b>Documents Deleted</b>,
+        error: <b>Error in Deleting Documents</b>,
+      },
+      {
+        position: "bottom-center",
+      })
+      .then(()=>{
+        setRefereshGridData(!refereshGridData);
+      })
+    
+  }
   const columns = [
     { field: "title", headerName: "Title", flex: 5 },
+    { 
+      field: 'actions', 
+      headerName: 'Actions', 
+      width: 100,
+      renderCell: (params:any) => (
+        <Button
+          variant="outlined"
+          size="small"
+          sx={{ backgroundColor: '#ba071f', color: 'white', fontSize: '12px' 
+          ,padding: '3px',textTransform: 'Capitalize', borderColor: '#ba071f'}}
+          onClick={() => handleDelete(params.row.id)}
+        >
+          Delete
+        </Button>
+      ),
+    },
   ];
   const entity = "documents";
   const initialSort = [
