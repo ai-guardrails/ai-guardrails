@@ -244,7 +244,6 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                 ...updatedConversation,
                 messages: updatedMessages,
               };
-              console.log("updatedConversation",updatedConversation);
               homeDispatch({
                 field: 'selectedConversation',
                 value: updatedConversation,
@@ -353,7 +352,6 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
   // };
 
   const handleModelSelect = (tile:Tile) => {
-    console.log(tile)
       setTile(tile)
   }
 

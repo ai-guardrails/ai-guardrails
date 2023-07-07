@@ -66,14 +66,15 @@ export const ChatMessage: FC<Props> = memo(
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    const sources = message.msg_info?.sources.map(
-      (source: any, index: number) => {
+    const sources = useCallback(
+      message.msg_info?.sources.map((source: any, index: number) => {
         source = JSON.parse(source);
         return {
           fileName: source["metadata"]["source"],
           doc: source["doc"],
         };
-      }
+      }),
+      [message.msg_info?.sources]
     );
 
     const toggleEditing = () => {
