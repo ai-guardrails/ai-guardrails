@@ -17,12 +17,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { PluginList } from '@/types/plugin';
 import toast from "react-hot-toast";
 import Chip from '@mui/material/Chip';
 
 import { Message } from "@/types/chat";
-import { Plugin } from "@/types/plugin";
+import { Tile,TilesList } from "@/types/tiles";
 import { Prompt } from "@/types/prompt";
 
 import HomeContext from "@/pages/home/home.context";
@@ -36,14 +35,14 @@ import { analyzeMessage } from "@/services";
 import { AxiosResponse } from "axios";
 
 interface Props {
-  onSend: (message: Message, plugin: Plugin) => void;
+  onSend: (message: Message, tile: Tile) => void;
   onRegenerate: () => void;
   onScrollDownClick: () => void;
   stopConversationRef: MutableRefObject<boolean>;
   textareaRef: MutableRefObject<HTMLTextAreaElement | null>;
   showScrollDownButton: boolean;
-  plugin:Plugin;
-  setPlugin:Function;
+  tile:Tile;
+  setTile:Function;
 }
 const applicationName: string = import.meta.env.VITE_APPLICATION_NAME;
 
@@ -54,8 +53,8 @@ export const ChatInput = ({
   stopConversationRef,
   textareaRef,
   showScrollDownButton,
-  plugin,
-  setPlugin
+  tile,
+  setTile
 
 }: Props) => {
   const {
@@ -143,7 +142,7 @@ export const ChatInput = ({
       return;
     }
 
-    onSend({ role: "user", content: content , msg_info: null, userActionRequired: false }, plugin);
+    onSend({ role: "user", content: content , msg_info: null, userActionRequired: false }, tile);
     setContent("");
 
     if (window.innerWidth < 640 && textareaRef && textareaRef.current) {
@@ -279,13 +278,13 @@ export const ChatInput = ({
   useEffect(() => {
     if(!selectedConversation?.messages.length || selectedConversation.model == "gpt-3.5-turbo")
     {
-      setPlugin(PluginList[0])
+      setTile(TilesList[0])
     }
     else if(selectedConversation?.model == "private-docs"){
-      setPlugin(PluginList[1])
+      setTile(TilesList[1])
     }
     else if(selectedConversation?.model == "private-docs-private-llm"){
-      setPlugin(PluginList[2])
+      setTile(TilesList[2])
     }
 
   }, [selectedConversation]);
@@ -356,7 +355,7 @@ export const ChatInput = ({
             {plugin.id == PluginList[0].id ? <IconBolt size={20} /> : <IconBook size={20} />}
           </button> */}
           {/* {plugin can only be changed if conversation is empty} */}
-          {showPluginSelect && (
+          {/* {showPluginSelect && (
             <div className="absolute left-0 bottom-14 rounded bg-white dark:bg-[#343541]">
               <PluginSelect
                 plugin={plugin}
@@ -377,7 +376,7 @@ export const ChatInput = ({
                 }}
               />
             </div>
-          )}
+          )} */}
 
           <textarea
             ref={textareaRef} disabled={selectedConversation?.archived}

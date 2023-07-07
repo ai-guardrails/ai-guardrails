@@ -278,7 +278,7 @@ export const ChatMessage: FC<Props> = memo(
                         '& .MuiTab-root': {
                           fontFamily: "'Inter', sans-serif", // Set the font-family
                           fontWeight: 600,
-                          color: '#202123',
+                          color: 'white',
                           textTransform: 'Capitalize',
                           paddingTop: '0px',
                           

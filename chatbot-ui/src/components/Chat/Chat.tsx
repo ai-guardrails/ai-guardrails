@@ -17,10 +17,9 @@ import {
 import { throttle } from '@/utils/data/throttle';
 
 import { ChatBody, Conversation, Message } from '@/types/chat';
-import { Plugin } from '@/types/plugin';
+import { TilesList,Tile } from '@/types/tiles';
 
 import HomeContext from '@/pages/home/home.context';
-import { PluginList } from '@/types/plugin';
 
 import Spinner from '../Spinner';
 import { ChatInput } from './ChatInput';
@@ -72,14 +71,14 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [plugin, setPlugin] = useState<Plugin>(PluginList[0]);
+  const [tile, setTile] = useState<Tile>(TilesList[0]);
 
 
   const handleSend = useCallback(
-    async (message: Message, deleteCount = 0, plugin: Plugin , isOverRide:boolean = false) => {
+    async (message: Message, deleteCount = 0, tile: Tile , isOverRide:boolean = false) => {
       if (containsOnlyWhitespacesOrNewlines(message.content)) return;
       message.content = message.content.trim();
-      if(plugin.id === "gpt-3.5-turbo"){
+      if(tile.task === "gpt-3.5-turbo"){
         await anonymizeMessage(message.content)
         .then((res: any) => {
           message.content = res?.data?.result;
@@ -120,8 +119,8 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
           message: message.content
         };
 
-        let modelName = plugin?.id;
-        let task=plugin?.task;
+        let modelName = tile?.task;
+        let task=tile?.task;
         const controller = new AbortController();
         let response: any;
         if(isOverRide){
@@ -353,8 +352,9 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
   //   }
   // };
 
-  const handleModelSelect = (model:Plugin) => {
-      setPlugin(model)
+  const handleModelSelect = (tile:Tile) => {
+    console.log(tile)
+      setTile(tile)
   }
 
   const scrollDown = () => {
@@ -404,11 +404,6 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
     };
   }, [messagesEndRef]);
   
-    const tiles:  JSX.Element[] = [
-        <IconBolt size={80} />,
-        <IconBook size={80} />,
-    ];
-  
 
   return (
     <div className="relative flex-1 overflow-hidden bg-white dark:bg-[#343541]">
@@ -436,15 +431,15 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                   )}
                 </div>
                 <div className='flex gap-10'>
-                  {PluginList.map((plug, index) => (
-                    <div key={plug.id} className={`flex flex-col w-full gap-5 justify-center text-black  rounded-lg border border-neutral-200 p-4 dark:text-gray-400 dark:border-neutral-600 hover:bg-[#595959] dark:hover:bg-[#202123] cursor-pointer ${ plugin === PluginList[index] && 'bg-[#595959] dark:bg-[#202123]'}`}
-                      onClick={(e)=>{handleModelSelect(PluginList[index])}}
+                  {TilesList.map((curr_tile, index) => (
+                    <div key={index} className={`flex flex-col w-full gap-5 justify-center text-black  rounded-lg border border-neutral-200 p-4 dark:text-gray-400 dark:border-neutral-600 hover:bg-[#595959] dark:hover:bg-[#202123] cursor-pointer ${ tile === TilesList[index] && 'bg-[#595959] dark:bg-[#202123]'}`}
+                      onClick={(e)=>{handleModelSelect(TilesList[index])}}
                     >
                       <div className='flex justify-center'>
-                        {tiles[index]}
+                        {curr_tile.icon}
                       </div>
                       <div className='text-center '>
-                        {plug.name}
+                        {curr_tile.displayName}
                       </div>
                     </div>
                     ))}
@@ -518,7 +513,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                     handleSend(
                       editedMessage,
                       selectedConversation?.messages.length - index,
-                      plugin
+                      tile
                     );
                   }}
                   onOverRide={(selectedMessage) => {
@@ -527,7 +522,7 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
                     handleSend(
                       selectedMessage,
                       selectedConversation?.messages.length - index,
-                      plugin,
+                      tile,
                       true,
                     );
                   }}
@@ -549,17 +544,17 @@ export const Chat = memo(({ stopConversationRef }: Props) => {
 
         <ChatInput
           stopConversationRef={stopConversationRef}
-          plugin={plugin}
-          setPlugin={setPlugin}
+          tile={tile}
+          setTile={setTile}
           textareaRef={textareaRef}
-          onSend={(message, plugin) => {
+          onSend={(message, tile) => {
             setCurrentMessage(message);
-            handleSend(message, 0, plugin);
+            handleSend(message, 0, tile);
           }}
           onScrollDownClick={handleScrollDown}
           onRegenerate={() => {
             if (currentMessage) {
-              handleSend(currentMessage, 2, plugin);
+              handleSend(currentMessage, 2, tile);
             }
           }}
           showScrollDownButton={showScrollDownButton}
