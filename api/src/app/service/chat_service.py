@@ -111,11 +111,9 @@ class chat_service:
                         logging.info("calling document completion")
                         res = document_wrapper.document_completion(messages,token, is_private,prompt)
                         answer = res['answer']
-                        if res['sources']:
-                            sources = res['sources'][0]
-                            source = json.loads(sources)['metadata']['source'].split('/')[-1]
+                        
                         msg_info={
-                            "source": source,
+                            "sources": res['sources'] if res['sources'] else [],
                         }
                         chunk = json.dumps({
                                         "role": "assistant",

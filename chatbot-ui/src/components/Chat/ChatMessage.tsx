@@ -7,12 +7,20 @@ import {
   IconUser,
   IconShieldExclamation,
 } from "@tabler/icons-react";
-import { FC, memo, useContext, useEffect, useRef, useState } from "react";
-import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
+import {
+  FC,
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import Box from "@mui/material/Box";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
 import { updateConversation } from "@/utils/app/conversation";
 
 import { Conversation, Message } from "@/types/chat";
@@ -21,6 +29,7 @@ import HomeContext from "@/pages/home/home.context";
 
 import { CodeBlock } from "../Markdown/CodeBlock";
 import { MemoizedReactMarkdown } from "../Markdown/MemoizedReactMarkdown";
+import { SourceTabBar } from "./SourceTabBar";
 
 import rehypeMathjax from "rehype-mathjax";
 import remarkGfm from "remark-gfm";
@@ -36,9 +45,6 @@ export interface Props {
 
 export interface AssistantProps {
   content: string;
-  messageIndex: number;
-  messageIsStreaming: boolean;
-  selectedConversation: Conversation|undefined;
 }
 
 export const ChatMessage: FC<Props> = memo(
@@ -59,6 +65,16 @@ export const ChatMessage: FC<Props> = memo(
     const [messagedCopied, setMessageCopied] = useState(false);
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+    const sources = message.msg_info?.sources.map(
+      (source: any, index: number) => {
+        source = JSON.parse(source);
+        return {
+          fileName: source["metadata"]["source"],
+          doc: source["doc"],
+        };
+      }
+    );
 
     const toggleEditing = () => {
       setIsEditing(!isEditing);
@@ -141,17 +157,17 @@ export const ChatMessage: FC<Props> = memo(
       }
     }, [isEditing]);
 
-    const [value, setValue] = useState('1');
+    const [value, setValue] = useState("1");
 
-      const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-        setValue(newValue);
-      };
+    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+      setValue(newValue);
+    };
 
-      const style={
-        padding: '1.5em 0px 0px 0px',
-        fontFamily: "'Inter', sans-serif",
-        fontWeight: 500,
-      }
+    const style = {
+      padding: "1.5em 0px 0px 0px",
+      fontFamily: "'Inter', sans-serif",
+      fontWeight: 500,
+    };
 
     return (
       <div
@@ -242,70 +258,81 @@ export const ChatMessage: FC<Props> = memo(
               <>
                 <div className="prose whitespace-pre-wrap dark:prose-invert flex-1">
                   {message.content}
-                  {message.userActionRequired && messageIndex === (selectedConversation?.messages.length ?? 0) - 1 &&
-                  <div className="flex">
-                  <button
-                    className=" mt-1 flex w-[190px] flex-shrink-0 cursor-pointer gap-3 rounded-md border border-white/100 p-3 text-white bg-white dark:bg-[#343541] py-2 px-4 hover:opacity-50  md:mb-0 md:mt-2 "
-                    onClick={() => {
-                      if(onOverRide) onOverRide(message);
-                      
-                    }}
-                  >
-                    Override
-                  </button>
+                  {message.userActionRequired &&
+                    messageIndex ===
+                      (selectedConversation?.messages.length ?? 0) - 1 && (
+                      <div className="flex">
+                        <button
+                          className=" mt-1 flex w-[190px] flex-shrink-0 cursor-pointer gap-3 rounded-md border border-white/100 p-3 text-white bg-white dark:bg-[#343541] py-2 px-4 hover:opacity-50  md:mb-0 md:mt-2 "
+                          onClick={() => {
+                            if (onOverRide) onOverRide(message);
+                          }}
+                        >
+                          Override
+                        </button>
 
-                  <button
-                    className=" mt-1 ml-3 flex w-[190px] flex-shrink-0 cursor-pointer gap-3 rounded-md border border-white/100 p-3 text-white bg-white dark:bg-[#343541] py-2 px-4 hover:opacity-50  md:mb-0 md:mt-2 "
-                    onClick={() => {
-                      if(onRequestApproval && selectedConversation) onRequestApproval(selectedConversation?.id);
-                    }}
-                  >
-                    Request Approval
-                  </button>
-
-                    </div>
-                    }
+                        <button
+                          className=" mt-1 ml-3 flex w-[190px] flex-shrink-0 cursor-pointer gap-3 rounded-md border border-white/100 p-3 text-white bg-white dark:bg-[#343541] py-2 px-4 hover:opacity-50  md:mb-0 md:mt-2 "
+                          onClick={() => {
+                            if (onRequestApproval && selectedConversation)
+                              onRequestApproval(selectedConversation?.id);
+                          }}
+                        >
+                          Request Approval
+                        </button>
+                      </div>
+                    )}
                 </div>
               </>
             ) : (
               <div className="flex flex-row">
-                {message.msg_info?
-                 <Box sx={{ width: '100%', typography: 'body1'}}>
-                 <TabContext value={value}>
-                  <Box sx={{ borderBottom: 1, borderColor: 'divider' ,color:'white' ,}}>
-                    <TabList onChange={handleChange} aria-label="lab API tabs example"
-                      sx={{
-                        '& .MuiTab-root': {
-                          fontFamily: "'Inter', sans-serif", // Set the font-family
-                          fontWeight: 600,
-                          color: 'white',
-                          textTransform: 'Capitalize',
-                          paddingTop: '0px',
-                          
-                        },
-                        '& .MuiButtonBase-root.Mui-selected': {
-                          color: 'white',
-                        },
-                        '& .MuiTabs-indicator': {
-                          backgroundColor: 'white',
-                        },
-                        
-                      }}>
-                      <Tab label="Content" value="1" />
-                      <Tab label="Sources" value="2" />
-                    </TabList>
+                {message.msg_info ? (
+                  <Box sx={{ width: "100%", typography: "body1" }}>
+                    <TabContext value={value}>
+                      <Box
+                        sx={{
+                          borderBottom: 1,
+                          borderColor: "divider",
+                          color: "white",
+                        }}
+                      >
+                        <TabList
+                          onChange={handleChange}
+                          aria-label="lab API tabs example"
+                          variant="scrollable"
+                          scrollButtons="auto"
+                          sx={{
+                            "& .MuiTab-root": {
+                              fontFamily: "'Inter', sans-serif", // Set the font-family
+                              fontWeight: 600,
+                              color: "white",
+                              textTransform: "Capitalize",
+                              paddingTop: "0px",
+                              overflowY: "scroll",
+                            },
+                            "& .MuiButtonBase-root.Mui-selected": {
+                              color: "white",
+                            },
+                            "& .MuiTabs-indicator": {
+                              backgroundColor: "white",
+                            },
+                          }}
+                        >
+                          <Tab label="Answer" value="1" />
+                          <Tab label="Sources" value="2" />
+                        </TabList>
+                      </Box>
+                      <TabPanel value="1" sx={style}>
+                        <AssistantMessage content={message.content} />
+                      </TabPanel>
+                      <TabPanel value="2" sx={style}>
+                        <SourceTabBar sources={sources} />
+                      </TabPanel>
+                    </TabContext>
                   </Box>
-                  <TabPanel value="1" sx={style}>
-                    <AssistantMessage content={message.content} messageIndex={messageIndex} messageIsStreaming={messageIsStreaming} selectedConversation={selectedConversation} />
-                  </TabPanel>
-                  <TabPanel value="2" sx={style}>
-                      {message.msg_info?.source}
-                  </TabPanel>
-                </TabContext>
-                </Box>
-                :
-                  <AssistantMessage content={message.content} messageIndex={messageIndex} messageIsStreaming={messageIsStreaming} selectedConversation={selectedConversation} />
-                }
+                ) : (
+                  <AssistantMessage content={message.content} />
+                )}
 
                 <div className="md:-mr-8 ml-1 md:ml-0 flex flex-col md:flex-row gap-4 md:gap-1 items-center md:items-start justify-end md:justify-start">
                   {messagedCopied ? (
@@ -331,78 +358,71 @@ export const ChatMessage: FC<Props> = memo(
   }
 );
 
-
-
-export const AssistantMessage:FC<AssistantProps> = ({ content, messageIndex ,messageIsStreaming,selectedConversation }) => {
+export const AssistantMessage: FC<AssistantProps> = ({ content }) => {
   return (
     <MemoizedReactMarkdown
-                  className="prose dark:prose-invert flex-1"
-                  remarkPlugins={[remarkGfm, remarkMath]}
-                  rehypePlugins={[rehypeMathjax]}
-                  components={{
-                    code({ node, inline, className, children, ...props }) {
-                      if (children.length) {
-                        if (children[0] == "▍") {
-                          return (
-                            <span className="animate-pulse cursor-default mt-1">
-                              ▍
-                            </span>
-                          );
-                        }
+      className="prose dark:prose-invert flex-1"
+      remarkPlugins={[remarkGfm, remarkMath]}
+      rehypePlugins={[rehypeMathjax]}
+      components={{
+        code({ node, inline, className, children, ...props }) {
+          if (children.length) {
+            if (children[0] == "▍") {
+              return (
+                <span className="animate-pulse cursor-default mt-1">▍</span>
+              );
+            }
 
-                        children[0] = (children[0] as string).replace(
-                          "`▍`",
-                          "▍"
-                        );
-                      }
+            children[0] = (children[0] as string).replace("`▍`", "▍");
+          }
 
-                      const match = /language-(\w+)/.exec(className || "");
+          const match = /language-(\w+)/.exec(className || "");
 
-                      return !inline ? (
-                        <CodeBlock
-                          key={Math.random()}
-                          language={(match && match[1]) || ""}
-                          value={String(children).replace(/\n$/, "")}
-                          {...props}
-                        />
-                      ) : (
-                        <code className={className} {...props}>
-                          {children}
-                        </code>
-                      );
-                    },
-                    table({ children }) {
-                      return (
-                        <table className="border-collapse border border-black px-3 py-1 dark:border-white">
-                          {children}
-                        </table>
-                      );
-                    },
-                    th({ children }) {
-                      return (
-                        <th className="break-words border border-black bg-gray-500 px-3 py-1 text-white dark:border-white">
-                          {children}
-                        </th>
-                      );
-                    },
-                    td({ children }) {
-                      return (
-                        <td className="break-words border border-black px-3 py-1 dark:border-white">
-                          {children}
-                        </td>
-                      );
-                    },
-                  }}
-                >
-                  {`${content}${
-                    messageIsStreaming &&
-                    messageIndex ==
-                      (selectedConversation?.messages.length ?? 0) - 1
-                      ? "`▍`"
-                      : ""
-                  }`}
-                </MemoizedReactMarkdown>
-  )
-}
+          return !inline ? (
+            <CodeBlock
+              key={Math.random()}
+              language={(match && match[1]) || ""}
+              value={String(children).replace(/\n$/, "")}
+              {...props}
+            />
+          ) : (
+            <code className={className} {...props}>
+              {children}
+            </code>
+          );
+        },
+        table({ children }) {
+          return (
+            <table className="border-collapse border border-black px-3 py-1 dark:border-white">
+              {children}
+            </table>
+          );
+        },
+        th({ children }) {
+          return (
+            <th className="break-words border border-black bg-gray-500 px-3 py-1 text-white dark:border-white">
+              {children}
+            </th>
+          );
+        },
+        td({ children }) {
+          return (
+            <td className="break-words border border-black px-3 py-1 dark:border-white">
+              {children}
+            </td>
+          );
+        },
+      }}
+    >
+      {/* {`${content}${
+        messageIsStreaming &&
+        messageIndex == (selectedConversation?.messages.length ?? 0) - 1
+          ? "`▍`"
+          : ""
+      }`} */}
+      {`${content}`}
+    </MemoizedReactMarkdown>
+  );
+};
 
 ChatMessage.displayName = "ChatMessage";
