@@ -1,7 +1,7 @@
 import logging
 from oidc import get_current_user_email
 from repo.db import anonymize_audit_context,analysis_audit_context
-from repo.postgres import SqlAudits
+from database.repository import Persistence
 from integration.presidio_wrapper import presidio_wrapper
 from integration.nsfw_model_wrapper import NSFWModelWrapper
 import uuid
@@ -89,7 +89,7 @@ class pii_service:
         )
         analysis_audit_context.insert_analysis_audit(analysis_audit)
         for flag in analysis:   
-            SqlAudits.insert_analysis_audits(text = message, user_email = user_email, flagged_text = flag['flagged_text'],  analysed_entity = flag['entity_type'], criticality = 'SEVERE')
+            Persistence.insert_analysis_audits(text = message, user_email = user_email, flagged_text = flag['flagged_text'],  analysed_entity = flag['entity_type'], criticality = 'SEVERE')
         
 
 
@@ -105,5 +105,5 @@ class pii_service:
         )    
         anonymize_audit_context.insert_anonymize_audit(anonymize_audit)
         for flag in analysis:   
-            SqlAudits.insert_anonymize_audits(original_text = message, anonymized_text  = anonymized_message, flagged_text = flag['flagged_text'] , user_email= user_email, analysed_entity = flag['entity_type'], criticality = 'SEVERE')
+            Persistence.insert_anonymize_audits(original_text = message, anonymized_text  = anonymized_message, flagged_text = flag['flagged_text'] , user_email= user_email, analysed_entity = flag['entity_type'], criticality = 'SEVERE')
   

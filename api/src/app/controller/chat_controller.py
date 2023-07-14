@@ -2,12 +2,13 @@ from flask import Flask, Blueprint, Response
 from flask_restful import Resource, Api, reqparse, request
 from service.chat_service import chat_service
 from flask_smorest import Blueprint as SmorestBlueprint
-
-# import time
+from time import time
+import os
 from oidc import oidc
 from oidc import get_current_user_email
 from oidc import get_current_user_groups
 from utils.util import utils
+import json
 
 endpoints = SmorestBlueprint('chat', __name__)
 
@@ -75,3 +76,22 @@ def request_approval(conversation_id):
     user_groups = get_current_user_groups()
     message=chat_service.request_approval(conversation_id,user_email,user_groups)
     return {"message":message}
+
+@endpoints.route('/summarizebrief', methods=['POST'])
+@oidc.accept_token(require_token=True)
+def create_document():
+    data = json.loads( request.form['data'])
+    user_email = get_current_user_email()
+    token = request.headers['authorization'].split(' ')[1]
+    files = request.files.getlist('files')
+    file = files[0]
+    # save file to disk
+    filename = file.filename
+    filepath = os.path.join(os.getcwd(), filename)
+    file.save(filepath)
+    file.close()
+    def summarize_brief_stream(data,user_email,filename,filepath,token):
+        response=chat_service.summarize_brief(data,user_email,filename,filepath,token)
+        for chunk in response:
+            yield chunk
+    return Response(summarize_brief_stream(data,user_email,filename,filepath,token), mimetype='text/event-stream')

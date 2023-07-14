@@ -164,7 +164,7 @@ export const SidebarItems = () => {
     <List>
       {sidebarList.map((item, index) =>
         item.subMenu && item.subMenu.length > 0 ? (
-          <>
+          <div key={index}>
             <ListItemButton onClick={() => handleToggle(index)}>
               <ListItemIcon sx={{ minWidth: 35 }}>{item.icon}</ListItemIcon>
               <ListItemText primary={item.name} />
@@ -184,7 +184,7 @@ export const SidebarItems = () => {
                 ))}
               </List>
             </Collapse>
-          </>
+          </div>
         ) : (
           <ListItem key={item.name} disablePadding selected={location.pathname === item.link}>
             <ListItemButton onClick={() => handleNavigation(item.link)}>

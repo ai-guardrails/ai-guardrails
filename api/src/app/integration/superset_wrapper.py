@@ -14,13 +14,6 @@ class superset:
         
         return tokens["access_token"], tokens["refresh_token"],response.cookies
 
-    # def refresh_access_token():
-    #     url = 'http://20.204.227.58/api/v1/security/refresh'
-    #     headers = {"Authorization": f'Bearer {refresh_token}'}
-    #     response = requests.post(url=url, headers=headers)
-    #     token = response.json()
-    #     return token["access_token"]
-
     def get_guest_token():
         access_token, refresh_token, cookie = superset.get_access_token()
         url = format(Globals.superset_url)+'/api/v1/security/guest_token'

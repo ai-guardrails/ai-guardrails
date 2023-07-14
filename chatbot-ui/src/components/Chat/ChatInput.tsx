@@ -26,7 +26,6 @@ import { Prompt } from "@/types/prompt";
 
 import HomeContext from "@/pages/home/home.context";
 
-import { PluginSelect } from "./PluginSelect";
 import { PromptList } from "./PromptList";
 import { VariableModal } from "./VariableModal";
 import { debounce } from "lodash";
@@ -35,14 +34,12 @@ import { analyzeMessage } from "@/services";
 import { AxiosResponse } from "axios";
 
 interface Props {
-  onSend: (message: Message, tile: Tile) => void;
+  onSend: (message: Message) => void;
   onRegenerate: () => void;
   onScrollDownClick: () => void;
   stopConversationRef: MutableRefObject<boolean>;
   textareaRef: MutableRefObject<HTMLTextAreaElement | null>;
   showScrollDownButton: boolean;
-  tile:Tile;
-  setTile:Function;
 }
 const applicationName: string = import.meta.env.VITE_APPLICATION_NAME;
 
@@ -53,8 +50,6 @@ export const ChatInput = ({
   stopConversationRef,
   textareaRef,
   showScrollDownButton,
-  tile,
-  setTile
 
 }: Props) => {
   const {
@@ -142,7 +137,7 @@ export const ChatInput = ({
       return;
     }
 
-    onSend({ role: "user", content: content , msg_info: null, userActionRequired: false }, tile);
+    onSend({ role: "user", content: content , msg_info: null, userActionRequired: false });
     setContent("");
 
     if (window.innerWidth < 640 && textareaRef && textareaRef.current) {
@@ -275,19 +270,19 @@ export const ChatInput = ({
     }
   };
 
-  useEffect(() => {
-    if(!selectedConversation?.messages.length || selectedConversation.model == "gpt-3.5-turbo")
-    {
-      setTile(TilesList[0])
-    }
-    else if(selectedConversation?.model == "private-docs"){
-      setTile(TilesList[1])
-    }
-    else if(selectedConversation?.model == "private-docs-private-llm"){
-      setTile(TilesList[2])
-    }
+  // useEffect(() => {
+  //   if(!selectedConversation?.messages.length || selectedConversation.model == "gpt-3.5-turbo")
+  //   {
+  //     setTile(TilesList[0])
+  //   }
+  //   else if(selectedConversation?.model == "private-docs"){
+  //     setTile(TilesList[1])
+  //   }
+  //   else if(selectedConversation?.model == "private-docs-private-llm"){
+  //     setTile(TilesList[2])
+  //   }
 
-  }, [selectedConversation]);
+  // }, [selectedConversation]);
 
 
   useEffect(() => {

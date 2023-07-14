@@ -7,6 +7,7 @@ import { KeyValuePair } from '@/types/data';
 import { FolderType } from '@/types/folder';
 
 import { HomeInitialState } from './home.state';
+import { Tile } from '@/types/tiles';
 
 export interface HomeContextProps {
   state: HomeInitialState;
@@ -21,6 +22,7 @@ export interface HomeContextProps {
     data: KeyValuePair,
   ) => void;
   handleIsPrivate:(isPrivate:boolean)=>void;
+  handleSelectedTile:(tile:Tile)=>void;
 }
 
 const HomeContext = createContext<HomeContextProps>(undefined!);

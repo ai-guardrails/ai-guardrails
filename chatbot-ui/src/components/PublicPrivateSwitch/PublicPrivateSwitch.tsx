@@ -4,13 +4,20 @@ import { styled } from "@mui/material/styles";
 import Switch, { SwitchProps } from "@mui/material/Switch";
 
 import { IconLock, IconLockOpen } from "@tabler/icons-react";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
 interface Props {
   size: string | number | undefined;
 }
 
 const CustomSwitch = styled((props: SwitchProps) => (
-  <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
+  <Switch
+    focusVisibleClassName=".Mui-focusVisible"
+    disableRipple
+    {...props}
+    disabled
+  />
 ))(({ theme }) => ({
   width: 42,
   height: 26,
@@ -62,26 +69,33 @@ const CustomSwitch = styled((props: SwitchProps) => (
 
 const PublicPrivateSwitch: FC<Props> = ({ size }) => {
   const {
-    state: { isPrivate},
-    handleIsPrivate
+    state: { isPrivate },
+    handleIsPrivate,
   } = useContext(HomeContext);
-
-  
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleIsPrivate(event.target.checked);
   };
   return (
     <>
-      <div className="flex justify-around  items-center pb-2 pt-2 text-sm text-black dark:text-gray-400">
+      <div className="flex justify-around  items-center pb-2 pt-4 text-sm text-black dark:text-gray-400">
         <div className="flex flex-col justify-around  items-center">
           <IconLockOpen size={size} />
-          Public
+          Public LLM
         </div>
-        <CustomSwitch sx={{ m: 1 }} checked={isPrivate} onChange={handleChange}/>
+        <Tooltip title="Feature disabled. It will be available soon.">
+          <IconButton>
+            <CustomSwitch
+              sx={{ m: 1 }}
+              checked={isPrivate}
+              onChange={handleChange}
+            />
+          </IconButton>
+        </Tooltip>
+
         <div className="flex flex-col justify-around  items-center text-black dark:text-gray-400">
           <IconLock size={size} />
-          Private
+          Private LLM
         </div>
       </div>
     </>

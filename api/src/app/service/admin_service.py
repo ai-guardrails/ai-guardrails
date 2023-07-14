@@ -1,4 +1,4 @@
-from repo.postgres import SqlAudits
+from database.repository import Persistence
 from repo.db import conversation_context
 from globals import *
 from service.chat_service import chat_service
@@ -6,36 +6,24 @@ from service.chat_service import chat_service
 pg_schema = Globals.pg_schema
 class admin_service:
 
-    #SqlAudits
     def get_org():
-        return SqlAudits.get_org()
+        return Persistence.get_org()
     
     def save_org(request_data):
-        return SqlAudits.save_org(request_data)
+        return Persistence.save_org(request_data)
     
-    def get_all_list(table_name, sort, range_, filter_):
-        table=f'{pg_schema}.{table_name}'
-        total_count=SqlAudits.count_query(table, filter_)
-        rows=SqlAudits.get_list_query(table, sort, range_, filter_)
+    def get_all_list(Entity, sort, range_, filter_):
+        return Persistence.get_list_query(Entity, sort, range_, filter_)
     
-        if total_count['success'] and rows['success']:
-            data={"rows":rows['data'],"totalRows":total_count['data']}
-            return {"data":data,"success":True,"message":"Successfully retrieved the data"}
-        else:
-            return {"data":{},"success":False,"message":"Error in retrieving the data"}
 
+    def get_one_data(Entity, id):
+        return Persistence.get_one_query(Entity, id)
     
-    def get_one_data(table_name, id):
-        table=f'{pg_schema}.{table_name}'
-        return SqlAudits.get_one_query(table, id)
+    def update_data(Entity, id, data):
+        return Persistence.update_query(Entity, id, data)
     
-    def update_data(table_name, id, data):
-        table=f'{pg_schema}.{table_name}'
-        return SqlAudits.update_query(table, id, data)
-    
-    def insert_data(table_name, data):
-        table=f'{pg_schema}.{table_name}'
-        return SqlAudits.create_query(table, data)
+    def insert_data(Entity, data):
+        return Persistence.create_query(Entity, data)
 
     #mongodb
     def get_conversation_list(sort, range_, filter_):

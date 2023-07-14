@@ -217,3 +217,5 @@ yarn.lock
 pnpm-lock.yaml
 api/.vscode/settings.json
 api/src/app/client_secrets.json
+api/keys/vertexai.json
+keys/

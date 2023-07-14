@@ -21,6 +21,7 @@ import { cleanConversationHistory } from "@/utils/app/clean";
 import { FolderInterface, FolderType } from "@/types/folder";
 import { KeyValuePair } from "@/types/data";
 import { Prompt } from "@/types/prompt";
+import { Tile } from "@/types/tiles";
 
 export const Home = () => {
   const contextValue = useCreateReducer<HomeInitialState>({
@@ -38,7 +39,7 @@ export const Home = () => {
       prompts,
       temperature,
       refreshConversations,
-      isArchiveView
+      isArchiveView,
     },
     dispatch,
   } = contextValue;
@@ -214,6 +215,10 @@ export const Home = () => {
       dispatch({field:'isPrivate',value:isPrivate});
     }
 
+    const handleSelectedTile=(tile:Tile)=>{
+      dispatch({field:'selectedTile',value:tile});
+    }
+
   return (
     <HomeContext.Provider
       value={{
@@ -225,6 +230,7 @@ export const Home = () => {
         handleSelectConversation,
         handleUpdateConversation,
         handleIsPrivate,
+        handleSelectedTile
       }}
     >
       <main

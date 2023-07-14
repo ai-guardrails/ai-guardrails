@@ -128,3 +128,20 @@ class OrganisationEntity(Base):
             'openai_key': self.openai_key,
             'created_at': self.created_at
         }
+
+class DocumentEntity(Base):
+    __tablename__ = 'documents'
+    id = Column(Integer(), primary_key=True, autoincrement=True)
+    title = Column(String(100), nullable=False)
+    description = Column(Text)
+    location = Column(String())
+    folder_id = Column(Integer())
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'location': self.location,
+            'folder_id': self.folder_id
+        }

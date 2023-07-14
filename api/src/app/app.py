@@ -8,6 +8,7 @@ from controller.chat_controller import endpoints
 from controller.admin_controller import adminendpoints
 from controller.pii_controller import piiendpoints
 from controller.userdata_controller import userdataendpoints
+from controller.documents_controller import documentsendpoints
 from flask_smorest import Api
 import secrets
 from oidc import oidc
@@ -44,6 +45,7 @@ api.register_blueprint(endpoints, name="chat", url_prefix="/api/chat")
 api.register_blueprint(piiendpoints, name="pii", url_prefix="/api/pii")
 api.register_blueprint(userdataendpoints, name="user", url_prefix="/api/user")
 api.register_blueprint(adminendpoints, name="admin", url_prefix="/api/admin")
+api.register_blueprint(documentsendpoints, name="docs", url_prefix="/api/docs")
 
 CORS(app)
 cors = CORS(app, resource={
@@ -68,7 +70,7 @@ app.config.update({
 oidc.init_app(app)
 
 def create_app():
-    print("starting server")
+    logging.info("starting server")
     app.run(host = '0.0.0.0', debug=True,port=8080,threaded=True)
     return app
 create_app()

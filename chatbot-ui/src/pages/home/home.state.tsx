@@ -4,6 +4,7 @@ import { FolderInterface } from '@/types/folder';
 import { OpenAIModel, OpenAIModelID } from '@/types/openai';
 import { PluginKey } from '@/types/plugin';
 import { Prompt } from '@/types/prompt';
+import { Tile, TilesList } from '@/types/tiles';
 
 export interface HomeInitialState {
   apiKey: string;
@@ -30,6 +31,7 @@ export interface HomeInitialState {
   refreshConversations: boolean;
   isArchiveView: boolean;
   isPrivate:boolean;
+  selectedTile: Tile;
 }
 
 export const initialState: HomeInitialState = {
@@ -56,5 +58,6 @@ export const initialState: HomeInitialState = {
   serverSidePluginKeysSet: false,
   refreshConversations: false,
   isArchiveView: false,
-  isPrivate:true
+  isPrivate:false,
+  selectedTile: TilesList[0],
 };
